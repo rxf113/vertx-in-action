@@ -10,9 +10,26 @@ public class Offload extends AbstractVerticle {
 
   @Override
   public void start() {
-    vertx.setPeriodic(5000, id -> {
-      logger.info("Tick");
-      vertx.executeBlocking(this::blockingCode, this::resultHandler);
+//    vertx.setPeriodic(5000, id -> {
+//      logger.info("Tick");
+//      vertx.executeBlocking(this::blockingCode, this::resultHandler);
+//      System.out.println("fffff");
+//    });
+    vertx.setPeriodic(2000, id -> {
+      Object name = vertx.getOrCreateContext().get("name");
+      System.out.printf("\nname: %s",name);
+    });
+
+    vertx.executeBlocking(promise -> {
+      try {
+        Thread.sleep(4000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      vertx.getOrCreateContext().put("name","rxf113");
+      promise.complete("123");
+    },ar -> {
+      System.out.println(ar.result());
     });
   }
 
